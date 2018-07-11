@@ -12,6 +12,7 @@ import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
 
+// Heroku Test
 // App component - represents the whole app
 class App extends Component {
   constructor(props) {
