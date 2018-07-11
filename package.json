@@ -10,7 +10,9 @@
   "dependencies": {
     "@babel/runtime": "^7.0.0-beta.52",
     "meteor-node-stubs": "^0.4.1",
+    "moment": "^2.22.2",
     "react": "^16.4.1",
+    "react-datepicker": "^1.5.0",
     "react-dom": "^16.4.1"
   },
   "meteor": {
