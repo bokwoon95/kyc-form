@@ -199,6 +199,8 @@ class App extends Component {
         (entry) =>
         entry.name.fullName.toLowerCase().indexOf(firstName.toLowerCase()) !== -1
         &&
+        entry.name.fullName.toLowerCase().indexOf(middleName.toLowerCase()) !== -1
+        &&
         entry.name.fullName.toLowerCase().indexOf(lastName.toLowerCase()) !== -1
         &&
         entry.citizenship.toLowerCase().indexOf(citizenship.toLowerCase()) !== -1
