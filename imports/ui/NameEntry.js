@@ -31,17 +31,21 @@ export default class NameEntry extends Component {
   render() {
     return (
       <li>
-        <button className="delete" onClick={this.deleteThisNameEntry.bind(this)}>
-          delete
-        </button>
-      {this.state.showDetails ?
-          <button className="delete" onClick={this.hideThisNameEntry.bind(this)}>
-          hide
-          </button>
-          :
-          <button className="delete" onClick={this.showThisNameEntry.bind(this)}>
-          show
-          </button>
+        {this.props.adminMode ?
+            <button className="delete" onClick={this.deleteThisNameEntry.bind(this)}>
+              delete
+            </button>
+            :
+            ''
+        }
+        {this.state.showDetails ?
+            <button className="delete" onClick={this.hideThisNameEntry.bind(this)}>
+              hide
+            </button>
+            :
+            <button className="delete" onClick={this.showThisNameEntry.bind(this)}>
+              show
+            </button>
       }
 
       {!this.state.showDetails ?

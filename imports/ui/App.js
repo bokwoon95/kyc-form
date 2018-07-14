@@ -27,13 +27,17 @@ class App extends Component {
         },
         citizenship: '',
         dob: '',
+        notableActivity: '',
       },
       doFilterSearch: false,
+      adminMode: false,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleDateChange = this.handleDateChange.bind(this);
     this.activateSearch = this.activateSearch.bind(this);
     this.deactivateSearch = this.deactivateSearch.bind(this);
+    this.toggleAdminMode = this.toggleAdminMode.bind(this);
+    this.clearFields = this.clearFields.bind(this);
   }
 
   // updates this.state whenever the user modifies one of the following form fields:
@@ -79,6 +83,7 @@ class App extends Component {
     else if (name === 'crimesfield') {
       const newState = Object.assign({}, this.state);
       newState.currentEntry.notableActivity = value;
+      console.log("Tina Yuzuki says: " + newState);
       this.setState(newState);
       console.log("Current Form State:");
       console.log(JSON.stringify(this.state));
@@ -101,6 +106,7 @@ class App extends Component {
   // Helper function that adds the current person into the db
   // Only temporary
   addNewEntry(evt) {
+    evt.preventDefault();
     const firstName = this.state.currentEntry.name.firstName;
     const middleName = this.state.currentEntry.name.middleName;
     const lastName = this.state.currentEntry.name.lastName;
@@ -115,12 +121,12 @@ class App extends Component {
       },
       citizenship: this.state.currentEntry.citizenship,
       dob: this.state.currentEntry.dob,
+      notableActivity: this.state.currentEntry.notableActivity,
     });
   }
 
   // Tagged to the 'Search' button
   // Expected behavior: when pressed, the current this.state will be checked against the database for any matches
-  // Internally this should set a
   activateSearch(event) {
     event.preventDefault();
     this.setState({
@@ -142,6 +148,35 @@ class App extends Component {
     this.setState({
       doFilterSearch: false,
     });
+  }
+
+  toggleAdminMode(event) {
+    event.preventDefault();
+    this.setState({
+      adminMode: !this.state.adminMode,
+    });
+  }
+
+  clearFields(event) {
+    event.preventDefault();
+    this.refs.firstnamefield.value = '';
+    this.refs.middlenamefield.value = '';
+    this.refs.lastnamefield.value = '';
+    this.refs.citizenshipfield.value = '';
+    this.refs.datefield.value = '';
+    if (this.refs.crimesfield != undefined) {
+    this.refs.crimesfield.value = '';
+    }
+    const newState = Object.assign({}, this.state);
+    newState.displayedDate = '';
+    newState.currentEntry.name.firstName = '';
+    newState.currentEntry.name.middleName = '';
+    newState.currentEntry.name.lastName = '';
+    newState.currentEntry.citizenship = '';
+    newState.currentEntry.dob = '';
+    newState.currentEntry.notableActivity = '';
+    this.setState(newState);
+    console.log("ORARARA" + this.state);
   }
 
   renderNameCollection() {
@@ -193,7 +228,11 @@ class App extends Component {
     const entriez = (filteredNameCollection.length > 0) ?
     filteredNameCollection.map((nameEntry) => (
       <div>
-        <NameEntry key={nameEntry._id} nameEntry={nameEntry} />
+        <NameEntry
+          key={nameEntry._id}
+          nameEntry={nameEntry}
+          adminMode={this.state.adminMode}
+        />
       </div>
     ))
     :
@@ -209,12 +248,11 @@ class App extends Component {
       <div className="container">
         <header>
           <h1>
-            Customer Screening Form
+            Customer Screening Fo<span onClick={this.toggleAdminMode}>r</span>m
           </h1>
         </header>
 
         <form
-          onSubmit={this.activateSearch}
           autoComplete="off"
         >
           <ul className="form-style-1">
@@ -222,6 +260,7 @@ class App extends Component {
             <input
               type="text"
               name="firstnamefield"
+              ref="firstnamefield"
               className="field-divided"
               placeholder="First Name"
               autoComplete="off"
@@ -231,6 +270,7 @@ class App extends Component {
             <input
               type="text"
               name="middlenamefield"
+              ref="middlenamefield"
               className="field-divided"
               placeholder="Middle Name"
               autoComplete="off"
@@ -240,6 +280,7 @@ class App extends Component {
             <input
               type="text"
               name="lastnamefield"
+              ref="lastnamefield"
               className="field-divided"
               placeholder="Last Name"
               autoComplete="off"
@@ -251,6 +292,7 @@ class App extends Component {
             <input
               type="text"
               name="citizenshipfield"
+              ref="citizenshipfield"
               className="field-long"
               autoComplete="off"
               onChange={this.handleChange}
@@ -260,6 +302,7 @@ class App extends Component {
             <label> Date of Birth </label>
             <DatePicker
               name="datefield"
+              ref="datefield"
               selected={this.state.displayedDate}
               onChange={this.handleDateChange}
               showMonthDropdown
@@ -267,15 +310,22 @@ class App extends Component {
               dropdownMode="select"
             />
             <br />
-            <label> Notable Activity (for adding entries only)</label>
-            <input
-              type="text"
-              name="crimesfield"
-              autoComplete="off"
-              onChange={this.handleChange}
-            />
-            <br />
-            <br />
+            {this.state.adminMode ?
+                <div>
+                  <label> Notable Activity (for adding entries only)</label>
+                  <input
+                    type="text"
+                    name="crimesfield"
+                    ref="crimesfield"
+                    autoComplete="off"
+                    onChange={this.handleChange}
+                  />
+                  <br />
+                  <br />
+                </div>
+                :
+                ''
+            }
             {this.state.doFilterSearch ?
                 <button
                   className="buttonYee"
@@ -291,7 +341,16 @@ class App extends Component {
                   Activate Search
                 </button>
             }
-            &nbsp;<button className="buttonGee" onClick={this.addNewEntry.bind(this)}>Add Entry</button>
+            &nbsp;
+            <button className="buttonGee" onClick={this.clearFields.bind(this)}>Clear All</button>
+            {this.state.adminMode ?
+                <span>
+                  &nbsp;
+                  <button className="buttonGee" onClick={this.addNewEntry.bind(this)}>Add Entry</button>
+                </span>
+                :
+                ''
+            }
           </ul>
         </form>
         <ul>
