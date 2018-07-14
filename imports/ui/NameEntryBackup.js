@@ -12,6 +12,13 @@ export default class NameEntry extends Component {
     };
   }
 
+  toggleChecked() {
+    // Set the checked property to the opposite of its current value
+    NameCollection.update(this.props.nameEntry._id, {
+      $set: { checked: !this.props.nameEntry.checked },
+    });
+  }
+
   deleteThisNameEntry() {
     NameCollection.remove(this.props.nameEntry._id);
   }
@@ -29,11 +36,18 @@ export default class NameEntry extends Component {
   }
 
   render() {
+    // Give nameCollection a different className when they are checked off,
+    // so that we can style them nicely in CSS
+    const nameEntryClassName = this.props.nameEntry.checked ? 'checked' : '';
+
     return (
-      <li>
+      <li className={nameEntryClassName}>
+      { this.props.cu ?
         <button className="delete" onClick={this.deleteThisNameEntry.bind(this)}>
-          delete
-        </button>
+        delete
+        </button> : ''
+      }
+
       {this.state.showDetails ?
           <button className="delete" onClick={this.hideThisNameEntry.bind(this)}>
           hide
@@ -43,17 +57,24 @@ export default class NameEntry extends Component {
           show
           </button>
       }
+      {/*
+        <input
+          type="checkbox"
+          readOnly
+          checked={!!this.props.nameEntry.checked}
+          onClick={this.toggleChecked.bind(this)}
+        />
+        */}
 
       {!this.state.showDetails ?
           <span className="text">
-            <strong>{this.props.nameEntry.name.fullName}</strong>
+          <strong>{this.props.nameEntry.username}</strong>: {this.props.nameEntry.item}
           </span>
           :
           <span className="text">
-            <strong>{this.props.nameEntry.name.fullName}</strong>
-            <p><b>Citizenship:</b> {this.props.nameEntry.citizenship}</p>
-            <p><b>DOB:</b> {this.props.nameEntry.dob}</p>
-            <p><b>Notable Activity:</b> {this.props.nameEntry.notableActivity}</p>
+          <strong>{this.props.nameEntry.username}</strong>: {this.props.nameEntry.item}
+          <p>Price: {this.props.nameEntry.price}</p>
+          <p>Address: {this.props.nameEntry.address}</p>
           </span>
       }
       </li>
