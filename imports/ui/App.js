@@ -149,6 +149,8 @@ class App extends Component {
     let firstName = this.state.currentEntry.name.firstName;
     let middleName = this.state.currentEntry.name.middleName;
     let lastName = this.state.currentEntry.name.lastName;
+    let citizenship = this.state.currentEntry.citizenship;
+    let dob = this.state.currentEntry.dob;
 
     if (this.state.doFilterSearch) {
       console.log("First Name: " + firstName);
@@ -163,17 +165,42 @@ class App extends Component {
         entry.name.fullName.toLowerCase().indexOf(firstName.toLowerCase()) !== -1
         &&
         entry.name.fullName.toLowerCase().indexOf(lastName.toLowerCase()) !== -1
+        &&
+        entry.citizenship.toLowerCase().indexOf(citizenship.toLowerCase()) !== -1
+        &&
+        entry.dob.toLowerCase().indexOf(dob.toLowerCase()) !== -1
       );
     }
 
     console.log("this is nameCollection:");
     console.log(JSON.stringify(this.props.nameCollection));
     console.log("");
-    return filteredNameCollection.map((nameEntry) => (
+    console.log("BEES: " + filteredNameCollection.length);
+    // if (filteredNameCollection.length < 1) {
+    //   console.log("BBESS");
+    //   return
+    //     <div>
+    //       <b>No Entries Found</b>
+    //     </div>
+    // }
+    // else {
+    //   return filteredNameCollection.map((nameEntry) => (
+    //     <div>
+    //       <NameEntry key={nameEntry._id} nameEntry={nameEntry} />
+    //     </div>
+    //   ));
+    // }
+    const entriez = (filteredNameCollection.length > 0) ?
+    filteredNameCollection.map((nameEntry) => (
       <div>
         <NameEntry key={nameEntry._id} nameEntry={nameEntry} />
       </div>
-    ));
+    ))
+    :
+      <div>
+        <b>No Entries Found</b>
+      </div>
+    return entriez
   }
 
   render() {
@@ -182,7 +209,7 @@ class App extends Component {
       <div className="container">
         <header>
           <h1>
-            Name Screening Database thingo
+            Customer Screening Form
           </h1>
         </header>
 
